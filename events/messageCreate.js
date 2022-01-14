@@ -1,9 +1,11 @@
-import { promises } from "fs";
+import { promises, readFileSync } from "fs";
 import database from "../utils/database.js";
 import { log, error as _error } from "../utils/logger.js";
 import { prefixCache, aliases, disabledCache, disabledCmdCache, commands } from "../utils/collections.js";
 import parseCommand from "../utils/parseCommand.js";
 import { clean } from "../utils/misc.js";
+
+const { autoreact } = JSON.parse(readFileSync(new URL("../messages.json", import.meta.url)));
 
 // run when someone sends a message
 export default async (client, cluster, worker, ipc, message) => {
@@ -172,6 +174,15 @@ export default async (client, cluster, worker, ipc, message) => {
           name: "error.txt"
         }]);
       } catch { /* silently ignore */ }
+    }
+  }
+
+  // check if the message was sent in a channel with autoreply
+  for (const autoreaction of autoreact) {
+    if (message.guildID === autoreaction.guild && message.channel.id === autoreaction.channel) {
+      for (const emoji of autoreaction.emojis) {
+        await message.addReaction(emoji);
+      }
     }
   }
 };
