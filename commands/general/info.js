@@ -23,23 +23,11 @@ class InfoCommand extends Command {
         },
         {
           name: "📝 Credits:",
-          value: "Bot by **[Essem](https://essem.space)** and **[various contributors](https://github.com/esmBot/esmBot/graphs/contributors)**\nIcon by **[MintBurrow](https://twitter.com/MintBurrow)**"
-        },
-        {
-          name: "💬 Total Servers:",
-          value: stats && stats.guilds ? stats.guilds : `${this.client.guilds.size} (for this cluster only)`
-        },
-        {
-          name: "✅ Official Server:",
-          value: "[Click here!](https://projectlounge.pw/support)"
+          value: "Bot by **[Essem](https://essem.space)** and **[various contributors](https://github.com/esmBot/esmBot/graphs/contributors)**\nCustomized for Infernal Studios by [Swan](https://github.com/SwanX1)\nIcon by **[MintBurrow](https://twitter.com/MintBurrow)**"
         },
         {
           name: "💻 Source Code:",
-          value: "[Click here!](https://github.com/esmBot/esmBot)"
-        },
-        {
-          name: "🐦 Twitter:",
-          value: "[Click here!](https://twitter.com/esmBot_)"
+          value: "[Click here!](https://github.com/infernalexp/esmBot)"
         }
         ]
       }]

@@ -22,6 +22,8 @@ esmBot uses the following guild-related info:
 
 Out of these, **only guild and channel IDs are stored in the database** for configuration info and storing disabled channels/commands, prefixes, and tags.
 
-The stored info is stored in the database forever; however, I do intend to change this in the future. If you want this data removed on the main instance, you can DM me on Discord (Essem#9261) or email me at [data@essem.space](mailto:data@essem.space).
+The stored info is stored in the database forever; however, it's intended to change this in the future.
+If you want this data removed on the main instance, you can DM TheEssem on Discord (Essem#9261) or email him at [data@essem.space](mailto:data@essem.space).
+If you want this data removed from the Infernal Studios instance, you can DM SwanX1 on Discord (Swan#7488) or email them at [karliscern@gmail.com](mailto:karliscern@gmail.com)
 
-Hopefully this document is clear enough to help understand what esmBot does and doesn't use. If you have any further questions, please contact me via the [esmBot Support](https://projectlounge.pw/support) server.
+Hopefully this document is clear enough to help understand what esmBot does and doesn't use. If you have any further questions, please contact TheEssem via the [esmBot Support](https://projectlounge.pw/support) server.

@@ -1,7 +1,7 @@
 {
-  "name": "esmbot",
+  "name": "@infernalstudios/esmbot",
   "version": "1.7.0",
-  "description": "A Discord bot with miscellaneous features",
+  "description": "A customized version of the esmBot for the Infernal Studios Discord server.",
   "exports": "./app.js",
   "bin": "./app.js",
   "type": "module",
@@ -18,10 +18,22 @@
     "start": "node app.js"
   },
   "author": "Essem <essem@essem.space>",
+  "contributors": [
+    {
+      "name": "Infernal Studios",
+      "email": "contact@infernalstudios.org",
+      "url": "https://infernalstudios.org"
+    },
+    {
+      "name": "Kārlis Čerņavskis",
+      "email": "karliscern@gmail.com",
+      "url": "https://cernavskis.dev"
+    }
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/esmBot/esmBot.git"
+    "url": "git+https://github.com/infernalexp/esmBot.git"
   },
   "dependencies": {
     "@top-gg/sdk": "^3.1.1",
