@@ -10,11 +10,6 @@
   },
   "scripts": {
     "build": "cmake-js compile",
-    "docker:build": "docker build -t esmbot -f Dockerfile.bot .",
-    "docker:build-api": "docker build -t esmbot-api -f Dockerfile.api .",
-    "docker:run-bot": "docker run --rm --network=host esmbot",
-    "docker:run-api": "docker run --rm --network=host esmbot-api",
-    "docker:run-lava": "docker run --rm --network host -v \"$(pwd)\"/application.yml:/opt/Lavalink/application.yml -v \"$(pwd)\"/assets:/opt/Lavalink/assets fredboat/lavalink:dev",
     "start": "node app.js"
   },
   "author": "Essem <essem@essem.space>",
