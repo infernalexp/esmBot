@@ -1,10 +1,18 @@
 import ImageCommand from "../../classes/imageCommand.js";
 
 class JPEGCommand extends ImageCommand {
-  static description = "Adds max JPEG compression to an image";
-  static aliases = ["needsmorejpeg", "jpegify", "magik2", "morejpeg", "jpg"];
+  params() {
+    const quality = parseInt(this.args[0]);
+    return {
+      quality: isNaN(quality) ? 1 : Math.max(1, Math.min(quality, 100))
+    };
+  }
 
-  static noImage = "You need to provide an image to add more JPEG!";
+  static description = "Adds JPEG compression to an image";
+  static aliases = ["needsmorejpeg", "jpegify", "magik2", "morejpeg", "jpg", "quality"];
+  static arguments = ["{quality}"];
+
+  static noImage = "You need to provide an image/GIF to add more JPEG!";
   static command = "jpeg";
 }
 

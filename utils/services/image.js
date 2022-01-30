@@ -4,12 +4,19 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { Worker } from "worker_threads";
+import { createRequire } from "module";
+
+// only requiring this to work around an issue regarding worker threads
+const nodeRequire = createRequire(import.meta.url);
+nodeRequire(`../../build/${process.env.DEBUG && process.env.DEBUG === "true" ? "Debug" : "Release"}/image.node`);
 
 import ImageConnection from "../imageConnection.js";
 
 class ImageWorker extends BaseServiceWorker {
   constructor(setup) {
     super(setup);
+
+    console.info = (str) => this.ipc.sendToAdmiral("info", str);
 
     if (process.env.API === "true") {
       this.jobs = {};
@@ -42,15 +49,17 @@ class ImageWorker extends BaseServiceWorker {
 
   async getRunning() {
     const statuses = [];
-    for (const [address, connection] of this.connections) {
-      if (connection.conn.readyState !== 0 && connection.conn.readyState !== 1) {
-        continue;
+    if (process.env.API === "true") {
+      for (const [address, connection] of this.connections) {
+        if (connection.conn.readyState !== 0 && connection.conn.readyState !== 1) {
+          continue;
+        }
+        statuses.push({
+          address,
+          runningJobs: connection.njobs,
+          max: connection.max
+        });
       }
-      statuses.push({
-        address,
-        runningJobs: connection.njobs,
-        max: connection.max
-      });
     }
     return statuses;
   }
@@ -110,11 +119,22 @@ class ImageWorker extends BaseServiceWorker {
     if (process.env.API === "true") {
       let num = this.nextID++;
       if (num > 4294967295) num = this.nextID = 0;
-      const currentServer = await this.getIdeal(object);
-      await currentServer.queue(num, object);
-      await currentServer.wait(num);
-      const output = await currentServer.getOutput(num);
-      return output;
+      for (let i = 0; i < 3; i++) {
+        const currentServer = await this.getIdeal(object);
+        try {
+          await currentServer.queue(num, object);
+          await currentServer.wait(num);
+          const output = await currentServer.getOutput(num);
+          return output;
+        } catch (e) {
+          if (i < 2 && e === "Request ended prematurely due to a closed connection") {
+            continue;
+          } else {
+            if (e === "No available servers" && i >= 2) e = "Request ended prematurely due to a closed connection";
+            throw e;
+          }
+        }
+      }
     } else {
       // Called from command (not using image API)
       const worker = new Worker(path.join(path.dirname(fileURLToPath(import.meta.url)), "../image-runner.js"), {
