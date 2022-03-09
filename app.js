@@ -25,6 +25,8 @@ import winston from "winston";
 import { exec as baseExec } from "child_process";
 import { promisify } from "util";
 const exec = promisify(baseExec);
+// database stuff
+import database from "./utils/database.js";
 // dbl posting
 import { Api } from "@top-gg/sdk";
 const dbl = process.env.NODE_ENV === "production" && process.env.DBL ? new Api(process.env.DBL) : null;
@@ -53,7 +55,7 @@ k  <BBBw BBBBEBBBBBBBBBBBBBBBBBQ4BM  #
       *+,   " F'"'*^~~~^"^\`  V+*^       
           \`"""                          
           
-esmBot ${esmBotVersion} (${(await exec("git rev-parse HEAD").catch(() => {})).stdout.substring(0, 7)}), powered by eris-fleet ${erisFleetVersion}
+esmBot ${esmBotVersion} (${(await exec("git rev-parse HEAD").then(output => output.stdout.substring(0, 7), () => "unknown commit"))}), powered by eris-fleet ${erisFleetVersion}
 `);
 }
 
@@ -146,6 +148,10 @@ if (isMaster) {
     debug: "purple",
     warn: "yellow",
     error: "red"
+  });
+
+  database.upgrade(logger).then(result => {
+    if (result === 1) return process.exit(1);
   });
 
   Admiral.on("log", (m) => logger.main(m));

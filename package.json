@@ -1,6 +1,6 @@
 {
   "name": "@infernalstudios/esmbot",
-  "version": "1.7.1",
+  "version": "1.7.2",
   "description": "A customized version of the esmBot for the Infernal Studios Discord server.",
   "exports": "./app.js",
   "bin": "./app.js",

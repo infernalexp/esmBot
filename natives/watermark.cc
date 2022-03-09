@@ -14,10 +14,14 @@ Napi::Value Watermark(const Napi::CallbackInfo &info) {
     Napi::Object obj = info[0].As<Napi::Object>();
     Napi::Buffer<char> data = obj.Get("data").As<Napi::Buffer<char>>();
     string water = obj.Get("water").As<Napi::String>().Utf8Value();
-    int gravity = obj.Get("gravity").As<Napi::Number>().Int32Value();
+    Magick::GravityType gravity =
+        Magick::GravityType(obj.Get("gravity").As<Napi::Number>().Int64Value());
     bool resize = obj.Has("resize")
                       ? obj.Get("resize").As<Napi::Boolean>().Value()
                       : false;
+    float yscale = obj.Has("yscale")
+                       ? obj.Get("yscale").As<Napi::Number>().FloatValue()
+                       : false;
     bool append = obj.Has("append")
                       ? obj.Get("append").As<Napi::Boolean>().Value()
                       : false;
@@ -43,6 +47,10 @@ Napi::Value Watermark(const Napi::CallbackInfo &info) {
     if (resize && append) {
       string query(to_string(frames.front().baseColumns()) + "x");
       watermark.scale(Geometry(query));
+    } else if (resize && yscale) {
+      string query(to_string(frames.front().baseColumns()) + "x" +
+                   to_string(frames.front().baseRows() * yscale) + "!");
+      watermark.resize(Geometry(query));
     } else if (resize) {
       string query("x" + to_string(frames.front().baseRows()));
       watermark.scale(Geometry(query));
@@ -60,12 +68,10 @@ Napi::Value Watermark(const Napi::CallbackInfo &info) {
       } else if (mc) {
         image.backgroundColor("white");
         image.extent(Geometry(image.columns(), image.rows() + 15));
-        image.composite(watermark, Magick::GravityType(gravity),
-                        Magick::OverCompositeOp);
+        image.composite(watermark, gravity, Magick::OverCompositeOp);
         final = image;
       } else {
-        image.composite(watermark, Magick::GravityType(gravity),
-                        Magick::OverCompositeOp);
+        image.composite(watermark, gravity, Magick::OverCompositeOp);
         final = image;
       }
       image.magick(type);

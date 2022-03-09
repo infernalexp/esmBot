@@ -44,8 +44,10 @@ class Shard extends BaseClusterWorker {
     }
     log("info", "Finished loading commands.");
 
+    await database.setup(this.ipc);
+
     // register events
-    log("info", `Attempting to load events...`);
+    log("info", "Attempting to load events...");
     for await (const file of this.getFiles("./events/")) {
       log("log", `Loading event from ${file}...`);
       const eventArray = file.split("/");
@@ -102,8 +104,6 @@ class Shard extends BaseClusterWorker {
 
     // connect to lavalink
     if (!status && !connected) connect(this.bot);
-
-    database.setup();
 
     this.activityChanger();
 
